@@ -71,10 +71,10 @@ const Index = () => {
     <div className="min-h-screen bg-gradient-dreamy font-dreamy">
       {/* Floating decorative elements */}
       <div className="fixed inset-0 overflow-hidden pointer-events-none">
-        <Star className="absolute top-20 left-10 text-primary/20 animate-float" size={24} />
-        <Moon className="absolute top-32 right-20 text-accent/30 animate-gentle-pulse" size={28} />
-        <Sparkles className="absolute bottom-32 left-20 text-primary-soft/40 animate-float" size={20} />
-        <Star className="absolute bottom-20 right-10 text-emotions-calm/30 animate-gentle-pulse" size={22} />
+        <Star className="absolute top-20 left-4 md:left-10 text-primary/20 animate-float" size={20} />
+        <Moon className="absolute top-32 right-4 md:right-20 text-accent/30 animate-gentle-pulse" size={24} />
+        <Sparkles className="absolute bottom-32 left-4 md:left-20 text-primary-soft/40 animate-float" size={18} />
+        <Star className="absolute bottom-20 right-4 md:right-10 text-emotions-calm/30 animate-gentle-pulse" size={20} />
       </div>
 
       <div className="container mx-auto px-4 py-8 max-w-4xl relative">

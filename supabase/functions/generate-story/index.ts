@@ -15,11 +15,18 @@ serve(async (req) => {
   }
 
   try {
-    const { mood, childAge } = await req.json();
+    console.log('Edge function called');
+    const body = await req.json();
+    console.log('Request body:', body);
+    const { mood, childAge } = body;
 
     if (!openAIApiKey) {
+      console.error('OpenAI API key not configured');
       throw new Error('OpenAI API key not configured');
     }
+
+    console.log('OpenAI API key is configured');
+    console.log('Mood:', mood, 'Child Age:', childAge);
 
     const prompt = `Write a short, engaging ${mood.name.toLowerCase()} story for a ${childAge}-year-old child. The story should be:
 - Age-appropriate and safe
@@ -31,6 +38,7 @@ serve(async (req) => {
 
 Make it magical and wonderful, perfect for bedtime or quiet time.`;
 
+    console.log('Making OpenAI API request...');
     const response = await fetch('https://api.openai.com/v1/chat/completions', {
       method: 'POST',
       headers: {
@@ -51,13 +59,22 @@ Make it magical and wonderful, perfect for bedtime or quiet time.`;
       }),
     });
 
+    console.log('OpenAI API response status:', response.status);
     const data = await response.json();
+    console.log('OpenAI API response data:', data);
     
     if (!response.ok) {
-      throw new Error(data.error?.message || 'Failed to generate story');
+      console.error('OpenAI API error:', data);
+      throw new Error(data.error?.message || `OpenAI API error: ${response.status}`);
+    }
+
+    if (!data.choices || !data.choices[0] || !data.choices[0].message) {
+      console.error('Unexpected OpenAI API response format:', data);
+      throw new Error('Unexpected response format from OpenAI API');
     }
 
     const story = data.choices[0].message.content;
+    console.log('Story generated successfully');
 
     return new Response(JSON.stringify({ story }), {
       headers: { ...corsHeaders, 'Content-Type': 'application/json' },

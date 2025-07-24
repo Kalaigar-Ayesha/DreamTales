@@ -133,21 +133,24 @@ Created with love by DreamTales ✨`;
         </div>
 
         {/* Action Buttons */}
-        <div className="flex flex-wrap gap-3 justify-center">
+        <div className="flex flex-wrap gap-2 md:gap-3 justify-center px-2">
           <Button
             onClick={handleTextToSpeech}
             variant="outline"
-            className="rounded-xl border-primary/30 hover:bg-primary/10 transition-colors"
+            size="sm"
+            className="rounded-xl border-primary/30 hover:bg-primary/10 transition-colors min-w-[120px]"
           >
             {isPlaying ? (
               <>
                 <VolumeX size={16} className="mr-2" />
-                Stop Reading
+                <span className="hidden xs:inline">Stop Reading</span>
+                <span className="xs:hidden">Stop</span>
               </>
             ) : (
               <>
                 <Volume2 size={16} className="mr-2" />
-                Read Aloud
+                <span className="hidden xs:inline">Read Aloud</span>
+                <span className="xs:hidden">Read</span>
               </>
             )}
           </Button>
@@ -155,16 +158,18 @@ Created with love by DreamTales ✨`;
           <Button
             onClick={handleCopyStory}
             variant="outline"
-            className="rounded-xl border-primary/30 hover:bg-primary/10 transition-colors"
+            size="sm"
+            className="rounded-xl border-primary/30 hover:bg-primary/10 transition-colors min-w-[100px]"
           >
             <Copy size={16} className="mr-2" />
-            Copy Story
+            Copy
           </Button>
 
           <Button
             onClick={handleDownloadStory}
             variant="outline"
-            className="rounded-xl border-primary/30 hover:bg-primary/10 transition-colors"
+            size="sm"
+            className="rounded-xl border-primary/30 hover:bg-primary/10 transition-colors min-w-[120px]"
           >
             <Download size={16} className="mr-2" />
             Download
