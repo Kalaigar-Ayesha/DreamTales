@@ -3,6 +3,8 @@ import MoodSelector from "@/components/MoodSelector";
 import StoryDisplay from "@/components/StoryDisplay";
 import { Button } from "@/components/ui/button";
 import { Sparkles, Moon, Star } from "lucide-react";
+import { supabase } from "@/integrations/supabase/client";
+import { useToast } from "@/hooks/use-toast";
 
 export interface Mood {
   id: string;
@@ -17,23 +19,52 @@ const Index = () => {
   const [generatedStory, setGeneratedStory] = useState<string>("");
   const [isGenerating, setIsGenerating] = useState(false);
   const [childAge, setChildAge] = useState<number>(6);
+  const { toast } = useToast();
 
   const generateStory = async () => {
-    if (!selectedMood) return;
+    if (!selectedMood) {
+      toast({
+        title: "Please select a mood",
+        description: "Choose how your child is feeling to generate a personalized story.",
+        variant: "destructive"
+      });
+      return;
+    }
 
     setIsGenerating(true);
     
-    // Simulate story generation (will need OpenAI API integration)
-    setTimeout(() => {
-      const sampleStory = `Once upon a time, in a magical forest where the trees whispered secrets and flowers sang lullabies, there lived a little ${selectedMood.name === 'happy' ? 'bunny named Joy who loved to dance in the sunlight' : selectedMood.name === 'sad' ? 'bear named Hope who learned that even cloudy days bring beautiful rainbows' : selectedMood.name === 'scared' ? 'fox named Brave who discovered that the scary shadows were just friendly trees dancing' : selectedMood.name === 'excited' ? 'squirrel named Zip who couldn\'t wait to share adventures with friends' : selectedMood.name === 'angry' ? 'lion named Peace who learned to take deep breaths and count to ten' : 'owl named Calm who taught everyone the magic of quiet moments'}. 
+    try {
+      const { data, error } = await supabase.functions.invoke('generate-story', {
+        body: {
+          mood: selectedMood,
+          childAge: childAge
+        }
+      });
 
-This gentle creature learned that every feeling is like a color in a beautiful painting - each one important and special. And as the stars twinkled above, they realized that tomorrow would bring new adventures and joy.
+      if (error) {
+        throw error;
+      }
 
-The End. ✨`;
+      if (data?.error) {
+        throw new Error(data.error);
+      }
+
+      setGeneratedStory(data.story);
       
-      setGeneratedStory(sampleStory);
+      toast({
+        title: "Story generated!",
+        description: "Your magical story is ready to be enjoyed.",
+      });
+    } catch (error) {
+      console.error('Error generating story:', error);
+      toast({
+        title: "Story generation failed",
+        description: error.message || "Please check your OpenAI API key and try again.",
+        variant: "destructive"
+      });
+    } finally {
       setIsGenerating(false);
-    }, 2000);
+    }
   };
 
   return (
