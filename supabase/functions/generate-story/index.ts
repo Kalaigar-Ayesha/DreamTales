@@ -1,7 +1,7 @@
 import "https://deno.land/x/xhr@0.1.0/mod.ts";
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 
-const openAIApiKey = Deno.env.get('OPENAI_API_KEY');
+const geminiApiKey = Deno.env.get('GEMINI_API_KEY');
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -20,12 +20,12 @@ serve(async (req) => {
     console.log('Request body:', body);
     const { mood, childAge } = body;
 
-    if (!openAIApiKey) {
-      console.error('OpenAI API key not configured');
-      throw new Error('OpenAI API key not configured');
+    if (!geminiApiKey) {
+      console.error('Gemini API key not configured');
+      throw new Error('Gemini API key not configured');
     }
 
-    console.log('OpenAI API key is configured');
+    console.log('Gemini API key is configured');
     console.log('Mood:', mood, 'Child Age:', childAge);
 
     const prompt = `Write a short, engaging ${mood.name.toLowerCase()} story for a ${childAge}-year-old child. The story should be:
@@ -38,42 +38,47 @@ serve(async (req) => {
 
 Make it magical and wonderful, perfect for bedtime or quiet time.`;
 
-    console.log('Making OpenAI API request...');
-    const response = await fetch('https://api.openai.com/v1/chat/completions', {
+    console.log('Making Gemini API request...');
+    const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent`, {
       method: 'POST',
       headers: {
-        'Authorization': `Bearer ${openAIApiKey}`,
         'Content-Type': 'application/json',
+        'X-goog-api-key': geminiApiKey,
       },
       body: JSON.stringify({
-        model: 'gpt-4o-mini',
-        messages: [
-          { 
-            role: 'system', 
-            content: 'You are a talented children\'s storyteller who creates magical, age-appropriate stories that help children process emotions and feel comforted. Write stories that are engaging but calming, with positive messages.' 
-          },
-          { role: 'user', content: prompt }
+        contents: [
+          {
+            parts: [
+              {
+                text: `You are a talented children's storyteller who creates magical, age-appropriate stories that help children process emotions and feel comforted. Write stories that are engaging but calming, with positive messages.
+
+${prompt}`
+              }
+            ]
+          }
         ],
-        max_tokens: 300,
-        temperature: 0.8,
+        generationConfig: {
+          temperature: 0.8,
+          maxOutputTokens: 300,
+        }
       }),
     });
 
-    console.log('OpenAI API response status:', response.status);
+    console.log('Gemini API response status:', response.status);
     const data = await response.json();
-    console.log('OpenAI API response data:', data);
+    console.log('Gemini API response data:', data);
     
     if (!response.ok) {
-      console.error('OpenAI API error:', data);
-      throw new Error(data.error?.message || `OpenAI API error: ${response.status}`);
+      console.error('Gemini API error:', data);
+      throw new Error(data.error?.message || `Gemini API error: ${response.status}`);
     }
 
-    if (!data.choices || !data.choices[0] || !data.choices[0].message) {
-      console.error('Unexpected OpenAI API response format:', data);
-      throw new Error('Unexpected response format from OpenAI API');
+    if (!data.candidates || !data.candidates[0] || !data.candidates[0].content || !data.candidates[0].content.parts || !data.candidates[0].content.parts[0]) {
+      console.error('Unexpected Gemini API response format:', data);
+      throw new Error('Unexpected response format from Gemini API');
     }
 
-    const story = data.choices[0].message.content;
+    const story = data.candidates[0].content.parts[0].text;
     console.log('Story generated successfully');
 
     return new Response(JSON.stringify({ story }), {

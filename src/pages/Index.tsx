@@ -59,7 +59,7 @@ const Index = () => {
       console.error('Error generating story:', error);
       toast({
         title: "Story generation failed",
-        description: error.message || "Please check your OpenAI API key and try again.",
+        description: error.message || "Please check your Gemini API key and try again.",
         variant: "destructive"
       });
     } finally {
