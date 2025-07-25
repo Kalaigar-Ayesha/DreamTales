@@ -109,7 +109,7 @@ Created with love by DreamTales ✨`;
 
   return (
     <div className="animate-slide-up">
-      <Card className="p-6 md:p-8 rounded-3xl border-2 border-primary/20 bg-gradient-story shadow-lg">
+      <Card className="p-6 md:p-8 rounded-3xl border-2 border-primary/30 bg-gradient-to-br from-background via-primary-soft/20 to-accent/20 shadow-xl shadow-primary/10 backdrop-blur-sm">
         {/* Story Header */}
         <div className="flex items-center justify-between mb-6">
           <div className="flex items-center gap-3">
@@ -128,7 +128,7 @@ Created with love by DreamTales ✨`;
             onClick={toggleReadingMode}
             variant="outline"
             size="sm"
-            className="rounded-xl border-primary/30 hover:bg-primary/10"
+            className="rounded-xl border-emotions-calm/40 bg-gradient-to-r from-emotions-calm/20 to-emotions-calm/10 hover:from-emotions-calm/30 hover:to-emotions-calm/40 transition-all duration-300"
           >
             <BookOpen size={16} className="mr-2" />
             {isReading ? 'Normal' : 'Reading'} Mode
@@ -137,7 +137,7 @@ Created with love by DreamTales ✨`;
 
         {/* Personalization Details */}
         {(currentSituation || desiredOutcome || moralValue || storyType || storyLength) && (
-          <div className="mb-6 p-4 bg-accent/10 rounded-2xl border border-accent/20">
+          <div className="mb-6 p-4 bg-gradient-to-r from-accent/20 via-primary-soft/20 to-secondary/20 rounded-2xl border border-primary/20 backdrop-blur-sm">
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 text-sm">
               {currentSituation && (
                 <div>
@@ -177,7 +177,7 @@ Created with love by DreamTales ✨`;
         <div className={`
           mb-6 leading-relaxed font-story transition-all duration-300
           ${isReading 
-            ? 'text-xl md:text-2xl leading-loose bg-card p-6 rounded-2xl border border-border' 
+            ? 'text-xl md:text-2xl leading-loose bg-gradient-to-br from-card via-primary-soft/10 to-accent/10 p-6 rounded-2xl border border-primary/20 shadow-inner' 
             : 'text-base md:text-lg'
           }
         `}>
@@ -194,7 +194,7 @@ Created with love by DreamTales ✨`;
             onClick={handleTextToSpeech}
             variant="outline"
             size="sm"
-            className="rounded-xl border-primary/30 hover:bg-primary/10 transition-colors min-w-[120px]"
+            className="rounded-xl border-primary/40 bg-gradient-to-r from-primary-soft/20 to-primary/10 hover:from-primary/20 hover:to-primary/30 transition-all duration-300 min-w-[120px] shadow-sm"
           >
             {isPlaying ? (
               <>
@@ -215,7 +215,7 @@ Created with love by DreamTales ✨`;
             onClick={handleCopyStory}
             variant="outline"
             size="sm"
-            className="rounded-xl border-primary/30 hover:bg-primary/10 transition-colors min-w-[100px]"
+            className="rounded-xl border-accent/40 bg-gradient-to-r from-accent/20 to-accent/10 hover:from-accent/30 hover:to-accent/40 transition-all duration-300 min-w-[100px] shadow-sm"
           >
             <Copy size={16} className="mr-2" />
             Copy
@@ -225,7 +225,7 @@ Created with love by DreamTales ✨`;
             onClick={handleDownloadStory}
             variant="outline"
             size="sm"
-            className="rounded-xl border-primary/30 hover:bg-primary/10 transition-colors min-w-[120px]"
+            className="rounded-xl border-secondary/40 bg-gradient-to-r from-secondary/20 to-secondary/10 hover:from-secondary/30 hover:to-secondary/40 transition-all duration-300 min-w-[120px] shadow-sm"
           >
             <Download size={16} className="mr-2" />
             Download
@@ -233,7 +233,7 @@ Created with love by DreamTales ✨`;
         </div>
 
         {/* Helpful Tips */}
-        <div className="mt-6 p-4 bg-accent/20 rounded-2xl border border-accent/30">
+        <div className="mt-6 p-4 bg-gradient-to-r from-emotions-happy/20 via-primary-soft/20 to-emotions-calm/20 rounded-2xl border border-primary/20 backdrop-blur-sm">
           <p className="text-sm text-muted-foreground text-center">
             💡 <strong>Tip:</strong> Use reading mode for bedtime stories, or read aloud to make it interactive!
           </p>

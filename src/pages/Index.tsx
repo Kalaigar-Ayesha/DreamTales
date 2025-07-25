@@ -47,9 +47,7 @@ const desiredOutcomes = [
 
 const genderOptions = [
   "Girl",
-  "Boy",
-  "Prefer not to say",
-  "Custom"
+  "Boy"
 ];
 
 const moralValues = [
@@ -93,7 +91,7 @@ const Index = () => {
   const [currentSituation, setCurrentSituation] = useState<string>("");
   const [desiredOutcome, setDesiredOutcome] = useState<string>("");
   const [gender, setGender] = useState<string>("");
-  const [customGender, setCustomGender] = useState<string>("");
+  
   const [moralValue, setMoralValue] = useState<string>("");
   const [storyType, setStoryType] = useState<string>("");
   const [storyLength, setStoryLength] = useState<string>("");
@@ -119,7 +117,7 @@ const Index = () => {
           childName: childName,
           currentSituation: currentSituation,
           desiredOutcome: desiredOutcome,
-          gender: gender === "Custom" ? customGender : gender,
+          gender: gender,
           moralValue: moralValue,
           storyType: storyType,
           storyLength: storyLength
@@ -178,19 +176,21 @@ const Index = () => {
           
           {/* Age Selector */}
           <div className="flex items-center justify-center gap-4 mb-8">
-            <label htmlFor="age" className="text-sm font-medium text-foreground">
+            <Label className="text-sm font-medium text-foreground">
               Child's Age:
-            </label>
-            <select 
-              id="age"
-              value={childAge} 
-              onChange={(e) => setChildAge(parseInt(e.target.value))}
-              className="px-4 py-2 rounded-xl border border-border bg-card text-card-foreground text-sm focus:ring-2 focus:ring-primary focus:border-transparent transition-all"
-            >
-              {[3, 4, 5, 6, 7, 8, 9, 10, 11, 12].map(age => (
-                <option key={age} value={age}>{age} years old</option>
-              ))}
-            </select>
+            </Label>
+            <Select value={childAge.toString()} onValueChange={(value) => setChildAge(parseInt(value))}>
+              <SelectTrigger className="w-40 rounded-xl bg-gradient-to-r from-primary-soft/20 to-accent/20 border-primary/30 hover:border-primary/50 transition-all">
+                <SelectValue placeholder="Select age" />
+              </SelectTrigger>
+              <SelectContent>
+                {[3, 4, 5, 6, 7, 8, 9, 10, 11, 12].map(age => (
+                  <SelectItem key={age} value={age.toString()}>
+                    {age} years old
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
           </div>
         </div>
 
@@ -202,8 +202,8 @@ const Index = () => {
         {/* Personalization Options */}
         {selectedMood && (
           <div className="mb-8 animate-slide-up">
-            <div className="bg-card/50 backdrop-blur-sm rounded-3xl p-6 md:p-8 border border-border/20 shadow-lg">
-              <h3 className="text-xl md:text-2xl font-bold text-center mb-6 text-foreground">
+            <div className="bg-gradient-to-br from-primary-soft/30 via-accent/20 to-secondary/30 backdrop-blur-sm rounded-3xl p-6 md:p-8 border border-primary/20 shadow-xl shadow-primary/10">
+              <h3 className="text-xl md:text-2xl font-bold text-center mb-6 text-foreground bg-gradient-to-r from-primary via-accent to-primary bg-clip-text text-transparent">
                 Personalize Your Story ✨
               </h3>
               
@@ -218,7 +218,7 @@ const Index = () => {
                     value={childName}
                     onChange={(e) => setChildName(e.target.value)}
                     placeholder="Enter name"
-                    className="rounded-xl bg-background/80 border-border/40"
+                    className="rounded-xl bg-gradient-to-r from-background/90 to-primary-soft/10 border-primary/30 focus:border-primary/60 transition-all"
                   />
                 </div>
 
@@ -226,7 +226,7 @@ const Index = () => {
                 <div className="space-y-2">
                   <Label className="text-sm font-medium text-foreground">Gender</Label>
                   <Select value={gender} onValueChange={setGender}>
-                    <SelectTrigger className="rounded-xl bg-background/80 border-border/40">
+                    <SelectTrigger className="rounded-xl bg-gradient-to-r from-background/90 to-accent/10 border-accent/30 focus:border-accent/60 transition-all">
                       <SelectValue placeholder="Select gender" />
                     </SelectTrigger>
                     <SelectContent>
@@ -237,21 +237,13 @@ const Index = () => {
                       ))}
                     </SelectContent>
                   </Select>
-                  {gender === "Custom" && (
-                    <Input
-                      value={customGender}
-                      onChange={(e) => setCustomGender(e.target.value)}
-                      placeholder="Enter custom gender"
-                      className="rounded-xl bg-background/80 border-border/40 mt-2"
-                    />
-                  )}
                 </div>
 
                 {/* Current Situation */}
                 <div className="space-y-2">
                   <Label className="text-sm font-medium text-foreground">Current Situation</Label>
                   <Select value={currentSituation} onValueChange={setCurrentSituation}>
-                    <SelectTrigger className="rounded-xl bg-background/80 border-border/40">
+                    <SelectTrigger className="rounded-xl bg-gradient-to-r from-background/90 to-emotions-calm/10 border-emotions-calm/30 focus:border-emotions-calm/60 transition-all">
                       <SelectValue placeholder="What's happening?" />
                     </SelectTrigger>
                     <SelectContent>
@@ -268,7 +260,7 @@ const Index = () => {
                 <div className="space-y-2">
                   <Label className="text-sm font-medium text-foreground">Story Goal</Label>
                   <Select value={desiredOutcome} onValueChange={setDesiredOutcome}>
-                    <SelectTrigger className="rounded-xl bg-background/80 border-border/40">
+                    <SelectTrigger className="rounded-xl bg-gradient-to-r from-background/90 to-emotions-happy/10 border-emotions-happy/30 focus:border-emotions-happy/60 transition-all">
                       <SelectValue placeholder="What should this help with?" />
                     </SelectTrigger>
                     <SelectContent>
@@ -285,7 +277,7 @@ const Index = () => {
                 <div className="space-y-2">
                   <Label className="text-sm font-medium text-foreground">Value to Teach</Label>
                   <Select value={moralValue} onValueChange={setMoralValue}>
-                    <SelectTrigger className="rounded-xl bg-background/80 border-border/40">
+                    <SelectTrigger className="rounded-xl bg-gradient-to-r from-background/90 to-emotions-excited/10 border-emotions-excited/30 focus:border-emotions-excited/60 transition-all">
                       <SelectValue placeholder="What lesson?" />
                     </SelectTrigger>
                     <SelectContent>
@@ -302,7 +294,7 @@ const Index = () => {
                 <div className="space-y-2">
                   <Label className="text-sm font-medium text-foreground">Story Type</Label>
                   <Select value={storyType} onValueChange={setStoryType}>
-                    <SelectTrigger className="rounded-xl bg-background/80 border-border/40">
+                    <SelectTrigger className="rounded-xl bg-gradient-to-r from-background/90 to-secondary/20 border-secondary/40 focus:border-secondary/70 transition-all">
                       <SelectValue placeholder="What kind of story?" />
                     </SelectTrigger>
                     <SelectContent>
@@ -319,7 +311,7 @@ const Index = () => {
                 <div className="space-y-2 md:col-span-2 lg:col-span-1">
                   <Label className="text-sm font-medium text-foreground">Story Length</Label>
                   <Select value={storyLength} onValueChange={setStoryLength}>
-                    <SelectTrigger className="rounded-xl bg-background/80 border-border/40">
+                    <SelectTrigger className="rounded-xl bg-gradient-to-r from-background/90 to-primary/10 border-primary/30 focus:border-primary/60 transition-all">
                       <SelectValue placeholder="How long?" />
                     </SelectTrigger>
                     <SelectContent>
@@ -342,7 +334,7 @@ const Index = () => {
             <Button 
               onClick={generateStory}
               disabled={isGenerating}
-              className="px-8 py-4 text-lg rounded-3xl bg-gradient-mood hover:shadow-lg hover:scale-105 transition-all duration-300 font-semibold"
+              className="px-8 py-4 text-lg rounded-3xl bg-gradient-mood hover:shadow-xl hover:shadow-primary/20 hover:scale-105 transition-all duration-300 font-semibold border border-primary/20"
             >
               {isGenerating ? (
                 <div className="flex items-center gap-2">
@@ -369,7 +361,7 @@ const Index = () => {
             childName={childName}
             currentSituation={currentSituation}
             desiredOutcome={desiredOutcome}
-            gender={gender === "Custom" ? customGender : gender}
+            gender={gender}
             moralValue={moralValue}
             storyType={storyType}
             storyLength={storyLength}
