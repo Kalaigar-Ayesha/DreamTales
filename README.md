@@ -5,6 +5,10 @@
 Built with ⚡ Vite, 💙 React + TypeScript, ✨ Tailwind CSS, and powered by ✨ Gemini AI and Supabase, DreamTales is fast, beautiful, and easy to use — on any device.
 
 ---
+🔗 Live Demo
+👉 Visit DreamTales Live : https://dream-tales-umber.vercel.app
+Create your own story in just a few clicks!
+
 
 ## ✨ Key Features
 
@@ -54,6 +58,6 @@ Because every child deserves a story that understands them — whether they need
 
 ---
 
-> Made with love for little dreamers 🧸✨
+Made with love for little dreamers 🧸✨
 
 ---
