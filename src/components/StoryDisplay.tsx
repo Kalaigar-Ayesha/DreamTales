@@ -9,9 +9,27 @@ interface StoryDisplayProps {
   story: string;
   mood: Mood | null;
   childAge: number;
+  childName?: string;
+  currentSituation?: string;
+  desiredOutcome?: string;
+  gender?: string;
+  moralValue?: string;
+  storyType?: string;
+  storyLength?: string;
 }
 
-const StoryDisplay = ({ story, mood, childAge }: StoryDisplayProps) => {
+const StoryDisplay = ({ 
+  story, 
+  mood, 
+  childAge, 
+  childName, 
+  currentSituation, 
+  desiredOutcome, 
+  gender, 
+  moralValue, 
+  storyType, 
+  storyLength 
+}: StoryDisplayProps) => {
   const [isReading, setIsReading] = useState(false);
   const [isPlaying, setIsPlaying] = useState(false);
   const { toast } = useToast();
@@ -60,9 +78,9 @@ const StoryDisplay = ({ story, mood, childAge }: StoryDisplayProps) => {
 
   const handleDownloadStory = () => {
     const storyContent = `DreamTales Story
-Generated for: ${childAge} year old
+Generated for: ${childName ? childName + ', ' : ''}${childAge} year old${gender ? ` ${gender.toLowerCase()}` : ''}
 Mood: ${mood?.name || 'Unknown'}
-Date: ${new Date().toLocaleDateString()}
+${currentSituation ? `Situation: ${currentSituation}\n` : ''}${desiredOutcome ? `Goal: ${desiredOutcome}\n` : ''}${moralValue ? `Teaching: ${moralValue}\n` : ''}${storyType ? `Type: ${storyType}\n` : ''}${storyLength ? `Length: ${storyLength}\n` : ''}Date: ${new Date().toLocaleDateString()}
 
 ${story}
 
@@ -98,10 +116,10 @@ Created with love by DreamTales ✨`;
             <div className="text-2xl">{mood?.emoji}</div>
             <div>
               <h3 className="text-lg font-semibold text-foreground font-story">
-                Your {mood?.name} Story
+                {childName ? `${childName}'s` : 'Your'} {mood?.name} Story
               </h3>
               <p className="text-sm text-muted-foreground">
-                Perfect for {childAge} year olds
+                Perfect for {childAge} year old{gender ? ` ${gender.toLowerCase()}` : 's'}
               </p>
             </div>
           </div>
@@ -116,6 +134,44 @@ Created with love by DreamTales ✨`;
             {isReading ? 'Normal' : 'Reading'} Mode
           </Button>
         </div>
+
+        {/* Personalization Details */}
+        {(currentSituation || desiredOutcome || moralValue || storyType || storyLength) && (
+          <div className="mb-6 p-4 bg-accent/10 rounded-2xl border border-accent/20">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 text-sm">
+              {currentSituation && (
+                <div>
+                  <span className="text-muted-foreground">Situation:</span>
+                  <span className="ml-2 text-foreground font-medium">{currentSituation}</span>
+                </div>
+              )}
+              {desiredOutcome && (
+                <div>
+                  <span className="text-muted-foreground">Goal:</span>
+                  <span className="ml-2 text-foreground font-medium">{desiredOutcome}</span>
+                </div>
+              )}
+              {moralValue && (
+                <div>
+                  <span className="text-muted-foreground">Teaching:</span>
+                  <span className="ml-2 text-foreground font-medium">{moralValue}</span>
+                </div>
+              )}
+              {storyType && (
+                <div>
+                  <span className="text-muted-foreground">Type:</span>
+                  <span className="ml-2 text-foreground font-medium">{storyType}</span>
+                </div>
+              )}
+              {storyLength && (
+                <div>
+                  <span className="text-muted-foreground">Length:</span>
+                  <span className="ml-2 text-foreground font-medium">{storyLength}</span>
+                </div>
+              )}
+            </div>
+          </div>
+        )}
 
         {/* Story Content */}
         <div className={`

@@ -18,7 +18,17 @@ serve(async (req) => {
     console.log('Edge function called');
     const body = await req.json();
     console.log('Request body:', body);
-    const { mood, childAge } = body;
+    const { 
+      mood, 
+      childAge, 
+      childName, 
+      currentSituation, 
+      desiredOutcome, 
+      gender, 
+      moralValue, 
+      storyType, 
+      storyLength 
+    } = body;
 
     if (!geminiApiKey) {
       console.error('Gemini API key not configured');
@@ -26,17 +36,44 @@ serve(async (req) => {
     }
 
     console.log('Gemini API key is configured');
-    console.log('Mood:', mood, 'Child Age:', childAge);
+    console.log('Story parameters:', { mood: mood?.name, childAge, childName, currentSituation, desiredOutcome, gender, moralValue, storyType, storyLength });
 
-    const prompt = `Write a short, engaging ${mood.name.toLowerCase()} story for a ${childAge}-year-old child. The story should be:
+    // Build personalized prompt
+    const nameText = childName ? ` for ${childName}` : '';
+    const genderText = gender ? ` (use ${gender.toLowerCase()} pronouns)` : '';
+    const situationText = currentSituation ? `\nCurrent situation: ${currentSituation}` : '';
+    const outcomeText = desiredOutcome ? `\nStory goal: ${desiredOutcome}` : '';
+    const moralText = moralValue ? `\nTeach the value of: ${moralValue}` : '';
+    const typeText = storyType ? `\nStory type: ${storyType}` : '';
+    
+    // Set word count based on length
+    let wordCount = '150-200 words';
+    let maxTokens = 300;
+    if (storyLength) {
+      if (storyLength.includes('Short')) {
+        wordCount = '100-150 words';
+        maxTokens = 200;
+      } else if (storyLength.includes('Medium')) {
+        wordCount = '300-500 words';
+        maxTokens = 600;
+      } else if (storyLength.includes('Long')) {
+        wordCount = '800-1200 words';
+        maxTokens = 1500;
+      }
+    }
+
+    const prompt = `Write a ${mood.name.toLowerCase()} story for a ${childAge}-year-old child${nameText}${genderText}.${situationText}${outcomeText}${moralText}${typeText}
+
+The story should be:
 - Age-appropriate and safe
-- Around 150-200 words
+- Around ${wordCount}
 - ${mood.description}
 - Easy to understand with simple vocabulary
 - Have a positive, uplifting ending
 - Include vivid but gentle imagery that sparks imagination
+- Feel magical and wonderful
 
-Make it magical and wonderful, perfect for bedtime or quiet time.`;
+Make sure the story addresses the current situation and helps achieve the desired outcome while teaching the specified value.`;
 
     console.log('Making Gemini API request...');
     const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent`, {
@@ -59,7 +96,7 @@ ${prompt}`
         ],
         generationConfig: {
           temperature: 0.8,
-          maxOutputTokens: 300,
+          maxOutputTokens: maxTokens,
         }
       }),
     });
