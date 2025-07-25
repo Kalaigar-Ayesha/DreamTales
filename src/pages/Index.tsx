@@ -211,7 +211,7 @@ const Index = () => {
                 {/* Child's Name */}
                 <div className="space-y-2">
                   <Label htmlFor="childName" className="text-sm font-medium text-foreground">
-                    Child's Name (Optional)
+                    Child's Name
                   </Label>
                   <Input
                     id="childName"
